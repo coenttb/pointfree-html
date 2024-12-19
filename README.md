@@ -1,6 +1,6 @@
 # swift-html
 
-A Swift DSL for HTML based on [pointfreeco/swift-html](https://www.github.com/pointfreeco/swift-html) and updated to match the current approach on [pointfreeco/pointfreeco](https://github.com/pointfreeco/pointfreeco).
+A Swift DSL for HTML based on [pointfreeco/swift-html](https://www.github.com/pointfreeco/swift-html) and updated to the version on [pointfreeco/pointfreeco](https://github.com/pointfreeco/pointfreeco).
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
 
@@ -37,8 +37,10 @@ dependencies: [
 
 ## Related Projects
 
-* [coenttb-html](https://www.github.com/coenttb/coenttb-html): Extends [coenttb/swift-html](https://www.github.com/coenttb/swift-html) with additional functionality and integrations for HTML, Markdown, Email, and printing HTML to PDF.
+* [pointfree-html](https://www.github.com/coenttb/swift-css): A Swift DSL for HTML based on [pointfreeco/swift-html](https://www.github.com/pointfreeco/swift-html) and updated to the version on [pointfreeco/pointfreeco](https://github.com/pointfreeco/pointfreeco).
 * [swift-css](https://www.github.com/coenttb/swift-css): A Swift DSL for type-safe, extensible, and transformable CSS styles.
+* [swift-html](https://www.github.com/coenttb/swift-html): Integrates [swift-css](https://www.github.com/coenttb/swift-css) and  [coenttb/pointfree-html](https://www.github.com/coenttb/pointfree-html).
+* [coenttb-html](https://www.github.com/coenttb/coenttb-html): Extends [coenttb/swift-html](https://www.github.com/coenttb/swift-html) with additional functionality and integrations for HTML, Markdown, Email, and printing HTML to PDF.
 * [coenttb/swift-web](https://www.github.com/coenttb/swift-web): A modern fork of [pointfreeco/swift-web](https://www.github.com/pointfreeco/swift-web), providing modular tools to simplify web development in Swift.
 * [coenttb-web](https://www.github.com/coenttb/coenttb-web): Builds on [coenttb/swift-web](https://www.github.com/coenttb/swift-web) with additional features and integrations for Vapor and other frameworks.
 * [coenttb-com-server](https://www.github.com/coenttb/coenttb-com-server): The backend server for coenttb.com, written entirely in Swift and powered by [Vapor](https://www.github.com/vapor/vapor) and [coenttb-web](https://www.github.com/coenttb/coenttb-web).

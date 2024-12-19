@@ -1,5 +1,5 @@
 {
-  "originHash" : "48069cf83bbad2e7a2657132ae8e8ff6bb74cdd1fd44e6574179f96e4cd3deae",
+  "originHash" : "a5445258422b719e166750a071dcc5b99566e34e4a80dc692892cca85ec608c0",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-concurrency-extras",
       "state" : {
-        "revision" : "163409ef7dae9d960b87f34b51587b6609a76c1f",
-        "version" : "1.3.0"
+        "revision" : "82a4ae7170d98d8538ec77238b7eb8e7199ef2e8",
+        "version" : "1.3.1"
       }
     },
     {
