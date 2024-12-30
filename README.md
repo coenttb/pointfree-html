@@ -62,5 +62,3 @@ Got thoughts? Found something you love? Something you hate? Let me know! Your fe
 
 PointFreeHtml is licensed under the MIT License. See [MIT POINTFREE LICENSE](MIT%20POINTFREE%20LICENSE) for details.
 
-HTML is licensed under the Apache 2.0 License. See [APACHE 2.0 LICENSE](APACHE%202.0%20LICENSE) for details.
-
