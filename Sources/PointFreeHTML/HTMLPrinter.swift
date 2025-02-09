@@ -56,7 +56,7 @@ public struct HTMLPrinter: Sendable {
         
         public static let `default` = Self(forceImportant: false, indentation: "", newline: "")
         public static let pretty = Self(forceImportant: false, indentation: "  ", newline: "\n")
-        public static let email = Self(forceImportant: true, indentation: "", newline: "")
+        public static let email = Self(forceImportant: true, indentation: " ", newline: "\n")
     }
 }
 
