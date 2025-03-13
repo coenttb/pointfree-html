@@ -12,8 +12,8 @@ import PointFreeHTML
 struct MyDocument: HTMLDocument {
     var head: some HTML {
         title { "My Web Page" }
-        meta().charset("utf-8")
-        meta().name("viewport").content("width=device-width, initial-scale=1")
+        meta().attribute("charset", "utf-8")
+        meta().attribute("name", "viewport").attribute("content", "width=device-width, initial-scale=1")
     }
 
     var body: some HTML {
@@ -110,7 +110,7 @@ For full HTML documents, conform to the `HTMLDocument` protocol:
 struct HomePage: HTMLDocument {
     var head: some HTML {
         title { "Home Page" }
-        meta().charset("utf-8")
+        meta().attribute("charset", "utf-8")
     }
     
     var body: some HTML {

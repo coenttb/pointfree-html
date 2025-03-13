@@ -84,6 +84,12 @@ public struct HTMLElement<Content: HTML>: HTML {
                         printer.bytes.append(contentsOf: "&quot;".utf8)
                     case UInt8(ascii: "'"):
                         printer.bytes.append(contentsOf: "&#39;".utf8)
+                    case UInt8(ascii: "&"):
+                        printer.bytes.append(contentsOf: "&amp;".utf8)
+                    case UInt8(ascii: "<"):
+                        printer.bytes.append(contentsOf: "&lt;".utf8)
+                    case UInt8(ascii: ">"):
+                        printer.bytes.append(contentsOf: "&gt;".utf8)
                     default:
                         printer.bytes.append(byte)
                     }

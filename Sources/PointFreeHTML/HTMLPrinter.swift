@@ -163,6 +163,6 @@ private enum HTMLPrinterKey: DependencyKey {
     static var previewValue: HTMLPrinter { HTMLPrinter(.pretty) }
     
     /// Pretty-printing printer for test use.
-    static var testValue: HTMLPrinter { HTMLPrinter(.pretty) }
+    static var testValue: HTMLPrinter { HTMLPrinter(.default) }
 }
 

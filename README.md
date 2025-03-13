@@ -4,8 +4,6 @@ A Swift DSL for HTML based on [pointfreeco/swift-html](https://www.github.com/po
 
 ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
 
-This package is currently in active development and is subject to frequent changes. Features and APIs may change without prior notice until a stable release is available.
-
 ## Examples
 
 You can create HTML documents using a declarative, SwiftUI-like syntax, with support for type-safe CSS:

@@ -183,7 +183,7 @@ public struct HTMLText: HTML {
     
     /// Renders the text content with proper HTML escaping.
     ///
-    /// This method escapes characters like `&` and `<` to prevent HTML injection
+    /// This method escapes special characters (`&`, `<`, `>`) to prevent HTML injection
     /// and ensure the text renders correctly in an HTML document.
     ///
     /// - Parameters:
@@ -197,6 +197,8 @@ public struct HTMLText: HTML {
                 printer.bytes.append(contentsOf: "&amp;".utf8)
             case UInt8(ascii: "<"):
                 printer.bytes.append(contentsOf: "&lt;".utf8)
+            case UInt8(ascii: ">"):
+                printer.bytes.append(contentsOf: "&gt;".utf8)
             default:
                 printer.bytes.append(byte)
             }

@@ -18,6 +18,8 @@ Before diving into implementation details, let's consider what makes a component
 
 ## Basic Component Structure
 
+Any type conforming to the HTML protocol is valid HTML. That means you can create HTML using a function, a struct, and an enum, or a composition of any of them. You could even use a class or actor, but I'll leave that for you to explore.
+
 The simplest approach is to create functions that return HTML content:
 
 ```swift
@@ -29,9 +31,6 @@ func primaryButton(title: String, action: String) -> some HTML {
     .inlineStyle("background-color", "#4CAF50")
     .inlineStyle("color", "white")
     .inlineStyle("padding", "10px 15px")
-    .inlineStyle("border", "none")
-    .inlineStyle("border-radius", "4px")
-    .inlineStyle("cursor", "pointer")
 }
 ```
 
@@ -96,7 +95,7 @@ func styledButton(
 
 ## Component Types
 
-For more complex components, create dedicated types that conform to `HTML`:
+More commonly however, you create a dedicated type that conform to the `HTML` protocol:
 
 ```swift
 struct Card: HTML {

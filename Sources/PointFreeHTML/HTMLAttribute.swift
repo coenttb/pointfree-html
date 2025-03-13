@@ -26,6 +26,18 @@ extension HTML {
     ///   - value: The optional value of the attribute. If nil, the attribute is omitted.
     ///            If an empty string, the attribute is included without a value.
     /// - Returns: An HTML element with the attribute applied.
+    ///
+    /// - Note: This is the primary method for adding any HTML attribute.
+    ///   Use this for all attributes including common ones like
+    ///   `charset`, `name`, `content`, `type`, etc.
+    ///
+    /// Example:
+    /// ```swift
+    /// meta().attribute("charset", "utf-8")
+    /// meta().attribute("name", "viewport").attribute("content", "width=device-width, initial-scale=1")
+    /// input().attribute("type", "text").attribute("placeholder", "Enter your name")
+    /// div().attribute("id", "main").attribute("class", "container")
+    /// ```
     public func attribute(_ name: String, _ value: String? = "") -> _HTMLAttributes<Self> {
         _HTMLAttributes(content: self, attributes: value.map { [name: $0] } ?? [:])
     }
@@ -43,8 +55,8 @@ extension HTML {
     public func src(_ value: String?) -> _HTMLAttributes<Self> { attribute("src", value) }
     
     /// Deprecated method that should not be used.
-    @available(*, unavailable, message: "Use 'attribute', instead")
-    public func title(_ value: String?) -> _HTMLAttributes<Self> { attribute("src", value) }
+    @available(*, unavailable, message: "Use 'attribute(\"title\", value)' instead")
+    public func title(_ value: String?) -> _HTMLAttributes<Self> { attribute("title", value) }
 }
 
 /// A wrapper that applies attributes to an HTML element.
