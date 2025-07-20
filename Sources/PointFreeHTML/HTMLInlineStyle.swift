@@ -72,13 +72,13 @@ extension HTML {
 public struct HTMLInlineStyle<Content: HTML>: HTML {
     /// The HTML content being styled.
     private let content: Content
-    
+
     /// The collection of styles to apply.
     private var styles: [Style]
-    
+
     /// Generator for unique class names based on styles.
     @Dependency(ClassNameGenerator.self) fileprivate var classNameGenerator
-    
+
     /// Creates a new styled HTML element.
     ///
     /// - Parameters:
@@ -111,7 +111,7 @@ public struct HTMLInlineStyle<Content: HTML>: HTML {
         }
         ?? []
     }
-    
+
     /// Adds an additional style to this element.
     ///
     /// This method allows for chaining multiple styles on a single element.
@@ -151,7 +151,7 @@ public struct HTMLInlineStyle<Content: HTML>: HTML {
         }
         return copy
     }
-    
+
     /// Renders this styled HTML element into the provided printer.
     ///
     /// This method:
@@ -189,17 +189,17 @@ public struct HTMLInlineStyle<Content: HTML>: HTML {
     // Now update the batched processing render method
     public static func _render(_ html: HTMLInlineStyle<Content>, into printer: inout HTMLPrinter) {
         let previousClass = printer.attributes["class"]
-        
+
         // Collect all styles from nested HTMLInlineStyle elements
         var allStyles: [Style] = []
         var coreContent: any HTML = html
-        
+
         // Flatten the style chain iteratively using a protocol approach
         while let styledElement = coreContent as? any HTMLInlineStyleProtocol {
             allStyles.append(contentsOf: styledElement.extractStyles())
             coreContent = styledElement.extractContent()
         }
-        
+
         // Process all styles at once
         var classNames: [String] = []
         for style in allStyles {
@@ -207,32 +207,32 @@ public struct HTMLInlineStyle<Content: HTML>: HTML {
             let selector = """
         \(style.preSelector.map { "\($0) " } ?? "").\(className)\(style.pseudo?.rawValue ?? "")
         """
-            
+
             if printer.styles[style.media, default: [:]][selector] == nil {
                 printer.styles[style.media, default: [:]][selector] = "\(style.property):\(style.value)"
             }
             classNames.append(className)
         }
-        
+
         // Apply all class names at once
         if !classNames.isEmpty {
             let existingClass = printer.attributes["class"] ?? ""
             let separator = existingClass.isEmpty ? "" : " "
             printer.attributes["class"] = existingClass + separator + classNames.joined(separator: " ")
         }
-        
+
         // Render the core content using the instance method
         defer { printer.attributes["class"] = previousClass }
         coreContent.render(into: &printer)
     }
-    
+
     /// This type uses direct rendering and doesn't have a body.
     public var body: Never { fatalError() }
 }
 
 private struct ClassNameGenerator: DependencyKey {
     var generate: @Sendable (Style) -> String
-    
+
     static var liveValue: ClassNameGenerator {
         let seenStyles = LockIsolated<OrderedSet<Style>>([])
         return Self { style in
@@ -251,7 +251,7 @@ private struct ClassNameGenerator: DependencyKey {
             }
         }
     }
-    
+
     static var testValue: ClassNameGenerator {
         Self { style in
             let hash = classID(
@@ -284,7 +284,7 @@ extension HTMLInlineStyle: HTMLInlineStyleProtocol {
     func extractStyles() -> [Style] {
         return styles
     }
-    
+
     func extractContent() -> any HTML {
         return content
     }
@@ -297,11 +297,9 @@ extension HTML {
     }
 }
 
-
-
 private func classID(_ value: String) -> String {
     return encode(murmurHash(value))
-    
+
     func encode(_ value: UInt32) -> String {
         guard value > 0
         else { return "" }
@@ -313,7 +311,7 @@ private func classID(_ value: String) -> String {
             number /= baseCount
             encoded.append(baseChars[index])
         }
-        
+
         return encoded
     }
     func murmurHash(_ string: String) -> UInt32 {
@@ -325,32 +323,32 @@ private func classID(_ value: String) -> String {
         let r2: UInt32 = 13
         let m: UInt32 = 5
         let n: UInt32 = 0xe654_6b64
-        
+
         var hash: UInt32 = 0
-        
+
         let chunkSize = MemoryLayout<UInt32>.size
         let chunks = length / chunkSize
-        
+
         for i in 0..<chunks {
             var k: UInt32 = 0
             let offset = i * chunkSize
-            
+
             for j in 0..<chunkSize {
                 k |= UInt32(data[offset + j]) << (j * 8)
             }
-            
+
             k &*= c1
             k = (k << r1) | (k >> (32 - r1))
             k &*= c2
-            
+
             hash ^= k
             hash = (hash << r2) | (hash >> (32 - r2))
             hash = hash &* m &+ n
         }
-        
+
         var k1: UInt32 = 0
         let tailStart = chunks * chunkSize
-        
+
         switch length & 3 {
         case 3:
             k1 ^= UInt32(data[tailStart + 2]) << 16
@@ -367,18 +365,16 @@ private func classID(_ value: String) -> String {
         default:
             break
         }
-        
+
         hash ^= UInt32(length)
         hash ^= (hash >> 16)
         hash &*= 0x85eb_ca6b
         hash ^= (hash >> 13)
         hash &*= 0xc2b2_ae35
         hash ^= (hash >> 16)
-        
+
         return hash
     }
 }
 private let baseChars = Array("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 private let baseCount = UInt32(baseChars.count)
-
-

@@ -51,7 +51,7 @@ let package = Package(
             name: .pointfreeHtml.tests,
             dependencies: [
                 .pointfreeHtml,
-                .product(name: "DependenciesTestSupport", package: "swift-dependencies")
+                .pointfreeHtmlTestSupport
             ]
         ),
         .target(
@@ -64,8 +64,7 @@ let package = Package(
             name: .pointfreeHtmlElements.tests,
             dependencies: [
                 .pointfreeHtmlElements,
-                .dependenciesTestSupport,
-                .inlineSnapshotTesting
+                .pointfreeHtmlTestSupport
             ]
         ),
         .target(

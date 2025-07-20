@@ -34,7 +34,7 @@ import Dependencies
 public protocol HTMLDocumentProtocol: HTML {
     /// The type of HTML content for the document's head section.
     associatedtype Head: HTML
-    
+
     /// The head section of the HTML document.
     ///
     /// This property defines metadata, title, stylesheets, scripts, and other
@@ -74,18 +74,18 @@ extension HTMLDocumentProtocol {
 private struct Document<Head: HTML>: HTML {
     /// The head content for the document.
     let head: Head
-    
+
     /// Collected stylesheet content to be included in the document head.
     let stylesheet: String
-    
+
     /// Pre-rendered bytes for the document body.
     let bodyBytes: ContiguousArray<UInt8>
-    
+
     /// The body content of the document, which assembles the complete HTML structure.
     var body: some HTML {
         // Add the doctype declaration
         Doctype()
-        
+
         // Create the html element with language attribute
         tag("html") {
             // Add the head section with metadata and styles
@@ -95,21 +95,20 @@ private struct Document<Head: HTML>: HTML {
                     HTMLText(stylesheet)
                 }
             }
-            
+
             // Add the body section with pre-rendered content
             tag("body") {
                 HTMLRaw(bodyBytes)
             }
         }
-        .attribute("lang", "en")
     }
 }
 
 public struct HTMLDocument<Body: HTML, Head: HTML>: HTMLDocumentProtocol {
     public let head: Head
-    
+
     public let body: Body
-    
+
     @_disfavoredOverload
     public init(
         @HTMLBuilder head: () -> Head = { HTMLEmpty() },
@@ -118,7 +117,7 @@ public struct HTMLDocument<Body: HTML, Head: HTML>: HTMLDocumentProtocol {
         self.body = body()
         self.head = head()
     }
-    
+
     public init(
         @HTMLBuilder body: () -> Body,
         @HTMLBuilder head: () -> Head = { HTMLEmpty() }

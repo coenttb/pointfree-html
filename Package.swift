@@ -27,12 +27,12 @@ let package = Package(
         .macOS(.v14),
         .tvOS(.v17),
         .watchOS(.v10),
-        .macCatalyst(.v17),
+        .macCatalyst(.v17)
     ],
     products: [
         .library(name: .pointfreeHtml, targets: [.pointfreeHtml]),
         .library(name: .pointfreeHtmlElements, targets: [.pointfreeHtmlElements]),
-        .library(name: .pointfreeHtmlTestSupport, targets: [.pointfreeHtmlTestSupport]),
+        .library(name: .pointfreeHtmlTestSupport, targets: [.pointfreeHtmlTestSupport])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.2"),
@@ -44,14 +44,14 @@ let package = Package(
             name: .pointfreeHtml,
             dependencies: [
                 .product(name: "Dependencies", package: "swift-dependencies"),
-                .product(name: "OrderedCollections", package: "swift-collections"),
+                .product(name: "OrderedCollections", package: "swift-collections")
             ]
         ),
         .testTarget(
             name: .pointfreeHtml.tests,
             dependencies: [
                 .pointfreeHtml,
-                .product(name: "DependenciesTestSupport", package: "swift-dependencies")
+                .pointfreeHtmlTestSupport
             ]
         ),
         .target(
@@ -64,8 +64,7 @@ let package = Package(
             name: .pointfreeHtmlElements.tests,
             dependencies: [
                 .pointfreeHtmlElements,
-                .dependenciesTestSupport,
-                .inlineSnapshotTesting
+                .pointfreeHtmlTestSupport
             ]
         ),
         .target(
@@ -75,7 +74,7 @@ let package = Package(
                 .inlineSnapshotTesting,
                 .dependenciesTestSupport
             ]
-        ),
+        )
     ],
     swiftLanguageModes: [.v5]
 )
