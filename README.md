@@ -6,13 +6,25 @@ A Swift package to renders any Swift type as HTML on Apple-platforms, Linux, and
 
 PointFreeHTML is a foundational Swift package that enables **any Swift type** to be rendered as HTML through a simple protocol conformance. Other libraries use it to render their types to HTML, like this:
 
+### No child storage
 ```swift
-struct Anchor: HTML {
-  let href: String
+struct CustomLineBreak: HTML {
+  tag("br")
+    .inlineStyle("color", "red")
 }
 
-HTMLDocument {
-  Anchor(href: "#") { HTMLText("Click here to go home") }
+let htmlDocument = HTMLDocument {
+  CustomLineBreak()
+}
+``` 
+
+`htmlDocument` can now render either to bytes (`ContiguousArray<UInt8>`) via the `HTMLDocument.render` method, or as a string by passing it to `String.init(_ html: some HTML, encoding: String.Encoding = .utf8) throws`.
+
+### Child storage  
+
+```swift
+struct Anchor {
+  let href: String
 }
 
 extension Anchor {
@@ -22,11 +34,12 @@ extension Anchor {
     tag("a") { content() }
   }
 }
-```
 
-> TIP:  
+HTMLDocument {
+  Anchor(href: "#") { HTMLText("Click here to go home") }
+}
 
-HTMLDocument can now render either to bytes via the `HTMLDocument.render` method, or as a string by passing it to `String.init(_ html: some HTML, encoding: String.Encoding = .utf8) throws`.
+``` 
 
 ## Key features
 
@@ -37,106 +50,44 @@ HTMLDocument can now render either to bytes via the `HTMLDocument.render` method
 - **Minimal Dependencies**: Core library has minimal external dependencies
 - **Performance Focused**: Efficient rendering with HTMLPrinter
 
-## PointFreeElements usage examples
+## Usage examples
 
-### Basic HTML Structure
+For comprehensive examples of building HTML elements and components, see [swift-html](https://github.com/coenttb/swift-html), which provides a complete developer experience built on top of PointFreeHTML.
+
+### Basic protocol conformance
 
 ```swift
-struct BlogPost: HTML {
+struct CustomComponent<Content: HTML>: HTML {
     let title: String
-    let content: String
-    let publishDate: Date
+    let content: Content
     
-    var body: some HTML {
-        article {
-            header {
-                h1 { title }
-                time { publishDate.formatted() }
-            }
-            div {
-                HTMLRaw(content)
-            }
-        }
+    init(
+        title: String,
+        @HTMLBuilder _ content: () -> Content 
+    ) {
+        self.title = title
+        self.content = content
     }
-}
-```
-
-### Complete HTML document
-
-```swift
-struct MyWebsite: HTMLDocumentProtocol {
-    var head: some HTML {
-        title { "My Website" }
-        meta(.name(.viewport), .content("width=device-width, initial-scale=1"))
-    }
-    
-    var body: some HTML {
-        header {
-            nav {
-                a(href: "/") { "Home" }
-                a(href: "/about") { "About" }
-            }
-        }
-        main {
-            h1 { "Welcome to My Website" }
-            p { "Built with PointFreeHTML!" }
-        }
-    }
-}
-
-// Render complete document as either Bytes or String
-
-let website = MyWebsite()
-let htmlString: String = try String(website) 
-let htmlBytes: [ContigeousArray<Int>] = website.render()
-
-// Both include DOCTYPE, html, head, and body tags
-```
-
-### Conditional Rendering
-
-```swift
-struct UserProfile: HTML {
-    let user: User?
-    
-    var body: some HTML {
-        if let user = user {
-            div {
-                img()
-                  .src(user.avatarURL)
-                h2 { user.name }
-                p { user.bio }
-            }
-        } else {
-            div {
-                p { "Please log in to view your profile" }
-                a() { "Login" }
-            }
-        }
-    }
-}
-```
-
-### Dynamic Content with ForEach
-
-```swift
-struct ProductList: HTML {
-    let products: [Product]
     
     var body: some HTML {
         div {
-            h2 { "Our Products" }
-            HTMLForEach(products) { product in
-                div(.class("product-card")) {
-                    h3 { product.name }
-                    p { product.description }
-                    span(.class("price")) { "$\(product.price)" }
-                }
-            }
+            h1 { title }
+            content
+            p { "Custom component rendered with PointFreeHTML" }
         }
     }
 }
+
+CustomComponent(
+    title: "Hello World"
+) {
+    h5 { "This is my custom component" }
+}
 ```
+
+### Integration example
+
+See [swift-html-css-pointfree](https://github.com/coenttb/swift-html-css-pointfree) for an example of how third-party libraries can integrate PointFreeHTML as their rendering engine.
 
 ## Integration with Swift Ecosystem
 
@@ -144,10 +95,9 @@ PointFreeHTML integrates seamlessly with the broader Swift web development ecosy
 
 ### Swift-HTML Integration
 
-[swift-html](https://github.com/coenttb/swift-html) builds on PointFreeHTML to provide CSS integration and additional convenience APIs:
+[swift-html](https://github.com/coenttb/swift-html) builds on PointFreeHTML to provide domain-accurate HTML and CSS integration and additional convenience APIs:
 
 ```swift
-// With swift-html, you get domain-accurate HTML and CSS
 import HTML // This imports swift-html which includes PointFreeHTML
 
 struct StyledComponent: HTML {
@@ -184,12 +134,6 @@ app.get("hello", ":name") { req -> String in
 }
 ```
 
-### Real-world integrations
-
-- [coenttb/swift-html](https://github.com/coenttb/swift-html): A Swift DSL for domain-accurate, type-safe HTML & CSS.
-  - [coenttb/coenttb-com-server](https://github.com/coenttb/coenttb-com-server): the source code for [coenttb.com](https://github.com/coenttb/coenttb-com-server) and uses `pointfree-html` to render the HTML generated by `swift-html` 
-- PointFreeElements: included example integration with PointFreeHTML
-
 ## Installation
 
 ### Swift Package Manager
@@ -208,20 +152,15 @@ Add the package dependency in Xcode:
 - File → Add Package Dependencies
 - Enter: `https://github.com/coenttb/pointfree-html`
 
-## Available Modules
-
-- **PointFreeHTML**: Core HTML protocol and rendering engine
-- **PointFreeHTMLElements**: Standard HTML elements (`div`, `h1`, `p`, etc.)
-- **PointFreeHTMLTestSupport**: Testing utilities with snapshot testing support
 
 ## Testing
 
-PointFreeHTML includes comprehensive testing support:
+PointFreeHTML includes support for snapshot testing:
 
 ```swift
 import PointFreeHTMLTestSupport
-import InlineSnapshotTesting
 
+@Test
 func testMyComponent() {
     let component = MyComponent(title: "Test")
     
@@ -247,20 +186,20 @@ PointFreeHTML powers production applications:
 PointFreeHTML is part of a comprehensive Swift web development ecosystem:
 
 ### Core Libraries
-- **[swift-html](https://github.com/coenttb/swift-html)**: Type-safe HTML & CSS DSL integrating PointFreeHTML with CSS capabilities
-- **[swift-css](https://github.com/coenttb/swift-css)**: Type-safe CSS DSL
-- **[swift-html-types](https://github.com/coenttb/swift-html-types)**: Complete Swift domain model of HTML elements and attributes
-- **[swift-css-types](https://github.com/coenttb/swift-css-types)**: Complete Swift domain model of CSS properties and types
+- [swift-html](https://github.com/coenttb/swift-html): Type-safe HTML & CSS DSL built on PointFreeHTML -** use this for examples and full developer experience**
+- [swift-html-css-pointfree](https://github.com/coenttb/swift-html-css-pointfree): Integration layer combining PointFreeHTML with CSS types - **use this as example for third-party library integration**
+- [swift-html-types](https://github.com/coenttb/swift-html-types): Complete Swift domain model of HTML elements and attributes  
+- [swift-css-types](https://github.com/coenttb/swift-css-types): Complete Swift domain model of CSS properties and types
 
 ### Extended Functionality
-- **[coenttb-html](https://github.com/coenttb/coenttb-html)**: Extensions for HTML, Markdown, Email, and PDF generation
-- **[swift-html-to-pdf](https://github.com/coenttb/swift-html-to-pdf)**: Convert HTML to PDF on iOS and macOS
+- [coenttb-html](https://github.com/coenttb/coenttb-html): Extensions for HTML, Markdown, Email, and PDF generation
+- [pointfree-html-to-pdf](https://github.com/coenttb/swift-html-to-pdf): Convert HTML to PDF on iOS and macOS
 
 ### Server & Web
-- **[swift-web](https://github.com/coenttb/swift-web)**: Modular web development tools
-- **[coenttb-web](https://github.com/coenttb/coenttb-web)**: Feature collection for Swift servers
-- **[coenttb-server](https://github.com/coenttb/coenttb-server)**: Modern Swift server framework
-- **[coenttb-server-vapor](https://github.com/coenttb/coenttb-server-vapor)**: Vapor integration
+- [swift-web](https://github.com/coenttb/swift-web): Modular web development tools
+- [coenttb-web](https://github.com/coenttb/coenttb-web): Feature collection for Swift servers
+- [coenttb-server](https://github.com/coenttb/coenttb-server): Modern Swift server framework
+- [coenttb-server-vapor](https://github.com/coenttb/coenttb-server-vapor): Vapor integration
 
 ### Utilities
 - **[swift-languages](https://github.com/coenttb/swift-languages)**: Cross-platform translation library
@@ -271,7 +210,7 @@ Comprehensive documentation is available at the [Swift Package Index](https://sw
 
 ## Acknowledgements
 
-This project builds upon the foundational work by Point-Free (Brandon Williams and Stephen Celis). PointFreeHTML is a fork and adaptation of their original swift-html library, evolved to support universal HTML rendering for any Swift type.
+This project builds upon the foundational work by Point-Free (Brandon Williams and Stephen Celis). PointFreeHTML is a fork and adaptation of their original swift-html library.
 
 ## Contributing
 
@@ -285,7 +224,6 @@ Contributions are welcome! Please feel free to:
 ## Feedback & Support
 
 - **Issues**: [GitHub Issues](https://github.com/coenttb/pointfree-html/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/coenttb/pointfree-html/discussions)
 - **Newsletter**: [Subscribe](http://coenttb.com/en/newsletter/subscribe)
 - **Social**: [Follow @coenttb](http://x.com/coenttb)
 - **Professional**: [LinkedIn](https://www.linkedin.com/in/tenthijeboonkkamp)
