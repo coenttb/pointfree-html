@@ -24,6 +24,8 @@ extension Anchor {
 }
 ```
 
+> TIP:  
+
 HTMLDocument can now render either to bytes via the `HTMLDocument.render` method, or as a string by passing it to `String.init(_ html: some HTML, encoding: String.Encoding = .utf8) throws`.
 
 ## Key features
