@@ -5,8 +5,8 @@ import PackageDescription
 
 extension String {
     static let pointfreeHtml: Self = "PointFreeHTML"
-    static let pointfreeHtmlElements: Self = "PointFreeHtmlElements"
-    static let pointfreeHtmlTestSupport: Self = "PointFreeHtmlTestSupport"
+    static let pointfreeHtmlElements: Self = "PointFreeHTMLElements"
+    static let pointfreeHtmlTestSupport: Self = "PointFreeHTMLTestSupport"
 }
 
 extension Target.Dependency {
@@ -51,7 +51,7 @@ let package = Package(
             name: .pointfreeHtml.tests,
             dependencies: [
                 .pointfreeHtml,
-                .product(name: "DependenciesTestSupport", package: "swift-dependencies")
+                .pointfreeHtmlTestSupport
             ]
         ),
         .target(
@@ -64,8 +64,7 @@ let package = Package(
             name: .pointfreeHtmlElements.tests,
             dependencies: [
                 .pointfreeHtmlElements,
-                .dependenciesTestSupport,
-                .inlineSnapshotTesting
+                .pointfreeHtmlTestSupport
             ]
         ),
         .target(
@@ -80,8 +79,4 @@ let package = Package(
     swiftLanguageModes: [.v6]
 )
 
-extension String {
-    var tests: Self {
-        "\(self) Tests"
-    }
-}
+extension String { var tests: Self { self + " Tests" } }

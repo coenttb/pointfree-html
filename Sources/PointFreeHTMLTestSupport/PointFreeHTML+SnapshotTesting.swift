@@ -6,7 +6,6 @@
 //
 
 import Dependencies
-import Foundation
 import PointFreeHTML
 import SnapshotTesting
 
@@ -16,20 +15,19 @@ extension Snapshotting where Value: PointFreeHTML.HTMLDocumentProtocol, Format =
             return withDependencies {
                 $0.htmlPrinter = .init(.pretty)
             } operation: {
-                String(bytes: value.render(), encoding: .utf8) ?? "HTML rendering failed"
+                (try? String(value)) ?? "HTMLDocument rendering failed"
             }
         }
     }
 }
 
-extension Snapshotting where Value: HTML, Format == String {
+extension Snapshotting where Value: PointFreeHTML.HTML, Format == String {
     public static var html: Self {
         Snapshotting<String, String>.lines.pullback { value in
-
             return withDependencies {
                 $0.htmlPrinter = .init(.pretty)
             } operation: {
-                String(bytes: value.render(), encoding: .utf8) ?? "HTML rendering failed"
+                (try? String(value)) ?? "HTML rendering failed"
             }
         }
     }

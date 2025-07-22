@@ -96,5 +96,5 @@ Got thoughts? Found something you love? Something you hate? Let me know! Your fe
 
 ## License
 
-PointFreeHtml is licensed under the MIT License. See [MIT POINTFREE LICENSE](MIT%20POINTFREE%20LICENSE) for details.
+PointFreeHTML is licensed under the MIT License. See [MIT POINTFREE LICENSE](MIT%20POINTFREE%20LICENSE) for details.
 

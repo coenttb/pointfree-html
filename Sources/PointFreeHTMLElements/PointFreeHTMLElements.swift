@@ -5,7 +5,6 @@
 //  Created by Coen ten Thije Boonkkamp on 10/04/2025.
 //
 
-import Foundation
 import PointFreeHTML
 
 public var a: HTMLTag { #function }
@@ -110,8 +109,7 @@ public func script(_ text: () -> String = { "" }) -> HTMLElement<HTMLRaw> {
         if scalar == "<",
            text.unicodeScalars[index...].starts(with: "<!--".unicodeScalars)
             || text.unicodeScalars[index...].starts(with: "<script".unicodeScalars)
-            || text.unicodeScalars[index...].starts(with: "</script".unicodeScalars)
-        {
+            || text.unicodeScalars[index...].starts(with: "</script".unicodeScalars) {
             escaped.unicodeScalars.append(contentsOf: #"\x3C"#.unicodeScalars)
         } else {
             escaped.unicodeScalars.append(scalar)
@@ -151,4 +149,3 @@ public var ul: HTMLTag { #function }
 public var `var`: HTMLTag { #function }
 public var video: HTMLTag { #function }
 public var wbr: HTMLVoidTag { #function }
-

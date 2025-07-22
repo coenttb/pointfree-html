@@ -26,8 +26,7 @@ public struct MediaQuery: RawRepresentable, Hashable, Sendable {
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
-    
+
     /// The CSS media query string.
     public var rawValue: String
 }
-

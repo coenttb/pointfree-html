@@ -21,14 +21,14 @@ import Foundation
 public struct Pseudo: RawRepresentable, Hashable, Sendable {
     /// The CSS pseudo-class or pseudo-element selector.
     public var rawValue: String
-    
+
     /// Creates a pseudo-selector with the specified CSS selector string.
     ///
     /// - Parameter rawValue: The CSS pseudo-selector string.
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
-    
+
     public static let active = Self(rawValue: ":active")
     public static let after = Self(rawValue: "::after")
     public static let before = Self(rawValue: "::before")

@@ -4,15 +4,15 @@
 import PackageDescription
 
 extension String {
-    static let pointfreeHtml: Self = "PointFreeHTML"
-    static let pointfreeHtmlElements: Self = "PointFreeHtmlElements"
-    static let pointfreeHtmlTestSupport: Self = "PointFreeHtmlTestSupport"
+    static let pointfreeHTML: Self = "PointFreeHTML"
+    static let pointfreeHTMLElements: Self = "PointFreeHTMLElements"
+    static let pointfreeHTMLTestSupport: Self = "PointFreeHTMLTestSupport"
 }
 
 extension Target.Dependency {
-    static var pointfreeHtml: Self { .target(name: .pointfreeHtml) }
-    static var pointfreeHtmlElements: Self { .target(name: .pointfreeHtmlElements) }
-    static var pointfreeHtmlTestSupport: Self { .target(name: .pointfreeHtmlTestSupport) }
+    static var pointfreeHTML: Self { .target(name: .pointfreeHTML) }
+    static var pointfreeHTMLElements: Self { .target(name: .pointfreeHTMLElements) }
+    static var pointfreeHTMLTestSupport: Self { .target(name: .pointfreeHTMLTestSupport) }
 }
 
 extension Target.Dependency {
@@ -27,12 +27,12 @@ let package = Package(
         .macOS(.v14),
         .tvOS(.v17),
         .watchOS(.v10),
-        .macCatalyst(.v17),
+        .macCatalyst(.v17)
     ],
     products: [
-        .library(name: .pointfreeHtml, targets: [.pointfreeHtml]),
-        .library(name: .pointfreeHtmlElements, targets: [.pointfreeHtmlElements]),
-        .library(name: .pointfreeHtmlTestSupport, targets: [.pointfreeHtmlTestSupport]),
+        .library(name: .pointfreeHTML, targets: [.pointfreeHTML]),
+        .library(name: .pointfreeHTMLElements, targets: [.pointfreeHTMLElements]),
+        .library(name: .pointfreeHTMLTestSupport, targets: [.pointfreeHTMLTestSupport])
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.2"),
@@ -41,41 +41,40 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: .pointfreeHtml,
+            name: .pointfreeHTML,
             dependencies: [
                 .product(name: "Dependencies", package: "swift-dependencies"),
-                .product(name: "OrderedCollections", package: "swift-collections"),
+                .product(name: "OrderedCollections", package: "swift-collections")
             ]
         ),
         .testTarget(
-            name: .pointfreeHtml.tests,
+            name: .pointfreeHTML.tests,
             dependencies: [
-                .pointfreeHtml,
-                .product(name: "DependenciesTestSupport", package: "swift-dependencies")
+                .pointfreeHTML,
+                .pointfreeHTMLTestSupport
             ]
         ),
         .target(
-            name: .pointfreeHtmlElements,
+            name: .pointfreeHTMLElements,
             dependencies: [
-                .pointfreeHtml
+                .pointfreeHTML
             ]
         ),
         .testTarget(
-            name: .pointfreeHtmlElements.tests,
+            name: .pointfreeHTMLElements.tests,
             dependencies: [
-                .pointfreeHtmlElements,
-                .dependenciesTestSupport,
-                .inlineSnapshotTesting
+                .pointfreeHTMLElements,
+                .pointfreeHTMLTestSupport
             ]
         ),
         .target(
-            name: .pointfreeHtmlTestSupport,
+            name: .pointfreeHTMLTestSupport,
             dependencies: [
-                .pointfreeHtml,
+                .pointfreeHTML,
                 .inlineSnapshotTesting,
                 .dependenciesTestSupport
             ]
-        ),
+        )
     ],
     swiftLanguageModes: [.v5]
 )
