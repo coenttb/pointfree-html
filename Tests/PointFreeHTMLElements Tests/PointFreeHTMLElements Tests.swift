@@ -21,6 +21,7 @@ struct PointFreeHTMLElementsTests {
 
     @Test("Semantic HTML5 structure snapshot")
     func semanticStructureSnapshot() {
+        
         assertInlineSnapshot(
             of: HTMLDocument {
                 main {
