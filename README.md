@@ -6,13 +6,25 @@ A Swift package to renders any Swift type as HTML on Apple-platforms, Linux, and
 
 PointFreeHTML is a foundational Swift package that enables **any Swift type** to be rendered as HTML through a simple protocol conformance. Other libraries use it to render their types to HTML, like this:
 
+### No child storage
 ```swift
-struct Anchor: HTML {
-  let href: String
+struct CustomLineBreak: HTML {
+  tag("br")
+    .inlineStyle("color", "red")
 }
 
-HTMLDocument {
-  Anchor(href: "#") { HTMLText("Click here to go home") }
+let htmlDocument = HTMLDocument {
+  CustomLineBreak()
+}
+``` 
+
+`htmlDocument` can now render either to bytes (`ContiguousArray<UInt8>`) via the `HTMLDocument.render` method, or as a string by passing it to `String.init(_ html: some HTML, encoding: String.Encoding = .utf8) throws`.
+
+### Child storage  
+
+```swift
+struct Anchor {
+  let href: String
 }
 
 extension Anchor {
@@ -22,9 +34,12 @@ extension Anchor {
     tag("a") { content() }
   }
 }
-``` 
 
-HTMLDocument can now render either to bytes (`ContiguousArray<UInt8>`) via the `HTMLDocument.render` method, or as a string by passing it to `String.init(_ html: some HTML, encoding: String.Encoding = .utf8) throws`.
+HTMLDocument {
+  Anchor(href: "#") { HTMLText("Click here to go home") }
+}
+
+``` 
 
 ## Key features
 
@@ -37,26 +52,42 @@ HTMLDocument can now render either to bytes (`ContiguousArray<UInt8>`) via the `
 
 ## Usage examples
 
-For comprehensive examples of building HTML elements and components, see **[swift-html](https://github.com/coenttb/swift-html)**, which provides a complete developer experience built on top of PointFreeHTML.
+For comprehensive examples of building HTML elements and components, see [swift-html](https://github.com/coenttb/swift-html), which provides a complete developer experience built on top of PointFreeHTML.
 
 ### Basic protocol conformance
 
 ```swift
-struct CustomComponent: HTML {
+struct CustomComponent<Content: HTML>: HTML {
     let title: String
+    let content: Content
+    
+    init(
+        title: String,
+        @HTMLBuilder _ content: () -> Content 
+    ) {
+        self.title = title
+        self.content = content
+    }
     
     var body: some HTML {
         div {
             h1 { title }
+            content
             p { "Custom component rendered with PointFreeHTML" }
         }
     }
+}
+
+CustomComponent(
+    title: "Hello World"
+) {
+    h5 { "This is my custom component" }
 }
 ```
 
 ### Integration example
 
-See **[swift-html-css-pointfree](https://github.com/coenttb/swift-html-css-pointfree)** for examples of how third-party libraries integrate PointFreeHTML as their rendering engine.
+See [swift-html-css-pointfree](https://github.com/coenttb/swift-html-css-pointfree) for an example of how third-party libraries can integrate PointFreeHTML as their rendering engine.
 
 ## Integration with Swift Ecosystem
 
