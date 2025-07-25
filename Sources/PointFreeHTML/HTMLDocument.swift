@@ -5,8 +5,6 @@
 //  Created by Coen ten Thije Boonkkamp on 22/07/2025.
 //
 
-import Foundation
-
 public struct HTMLDocument<Body: HTML, Head: HTML>: HTMLDocumentProtocol {
     public let head: Head
     public let body: Body

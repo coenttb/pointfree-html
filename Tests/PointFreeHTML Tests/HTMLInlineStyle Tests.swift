@@ -5,14 +5,13 @@
 //  Created by Coen ten Thije Boonkkamp on 20/07/2025.
 //
 
-import Foundation
 import PointFreeHTML
 import PointFreeHTMLTestSupport
 import Testing
 
 @Suite(
     "HTMLInlineStyle Tests",
-    .snapshots(record: .missing)
+    .snapshots(record: .failed)
 )
 struct HTMLInlineStyleTests {
 

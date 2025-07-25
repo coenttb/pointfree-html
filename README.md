@@ -1,91 +1,44 @@
 # PointFreeHTML
 
-A Swift package to renders any Swift type as HTML on Apple-platforms, Linux, and Windows.
+A cross-platform Swift package to render any Swift type as HTML.
 
 ## Overview
 
-PointFreeHTML is a foundational Swift package that enables **any Swift type** to be rendered as HTML through a simple protocol conformance. Other libraries use it to render their types to HTML, like this:
-
-### No child storage
-```swift
-struct CustomLineBreak: HTML {
-  tag("br")
-    .inlineStyle("color", "red")
-}
-
-let htmlDocument = HTMLDocument {
-  CustomLineBreak()
-}
-``` 
-
-`htmlDocument` can now render either to bytes (`ContiguousArray<UInt8>`) via the `HTMLDocument.render` method, or as a string by passing it to `String.init(_ html: some HTML, encoding: String.Encoding = .utf8) throws`.
-
-### Child storage  
-
-```swift
-struct Anchor {
-  let href: String
-}
-
-extension Anchor {
-  public func callAsFunction(
-    @HTMLBuilder _ content: () -> some HTML
-  ) -> some HTML {
-    tag("a") { content() }
-  }
-}
-
-HTMLDocument {
-  Anchor(href: "#") { HTMLText("Click here to go home") }
-}
-
-``` 
+PointFreeHTML enables **any Swift type** to be rendered as HTML through a simple protocol conformance. Other libraries use it to render their types to HTML.
 
 ## Key features
 
 - **Universal HTML Protocol**: Any Swift type can be rendered as HTML by conforming to the `HTML` protocol
+- **Performance Focused**: Efficient rendering with HTMLPrinter printing to bytes (`ContiguousArray<UInt8>`) or string
 - **Declarative Syntax**: SwiftUI-like syntax with `@HTMLBuilder` result builder
 - **Type Safety**: Compile-time checking prevents malformed HTML
 - **Composable Components**: Build complex UIs from reusable components
 - **Minimal Dependencies**: Core library has minimal external dependencies
-- **Performance Focused**: Efficient rendering with HTMLPrinter
 
 ## Usage examples
 
-For comprehensive examples of building HTML elements and components, see [swift-html](https://github.com/coenttb/swift-html), which provides a complete developer experience built on top of PointFreeHTML.
-
-### Basic protocol conformance
+### Basic Usage
 
 ```swift
-struct CustomComponent<Content: HTML>: HTML {
-    let title: String
-    let content: Content
-    
-    init(
-        title: String,
-        @HTMLBuilder _ content: () -> Content 
-    ) {
-        self.title = title
-        self.content = content
-    }
-    
+import PointFreeHTML
+
+struct Greeting: HTML {
+    let name: String
     var body: some HTML {
-        div {
-            h1 { title }
-            content
-            p { "Custom component rendered with PointFreeHTML" }
-        }
+        h1 { "Hello, \(name)!" }
     }
 }
 
-CustomComponent(
-    title: "Hello World"
-) {
-    h5 { "This is my custom component" }
-}
+let greeting = Greeting(name: "World")
+let htmlString: String = try String(greeting)
+let htmlBytes: ContiguousArray<UInt8> = HTMLDocument.render(greeting)
 ```
 
-### Integration example
+HTML and HTMLDocument can render to bytes (`ContiguousArray<UInt8>`) via the `HTMLDocument.render` method, or to a string by passing it to `String.init(_ html: some HTML, encoding: String.Encoding = .utf8) throws`.
+
+### Complete Examples
+
+For comprehensive examples of building HTML elements and components, see [swift-html](https://github.com/coenttb/swift-html), which provides a complete developer experience built on top of PointFreeHTML.
 
 See [swift-html-css-pointfree](https://github.com/coenttb/swift-html-css-pointfree) for an example of how third-party libraries can integrate PointFreeHTML as their rendering engine.
 
@@ -143,6 +96,14 @@ Add PointFreeHTML to your `Package.swift`:
 ```swift
 dependencies: [
     .package(url: "https://github.com/coenttb/pointfree-html", branch: "main")
+],
+targets: [
+    .target(
+        name: "YourTarget",
+        dependencies: [
+            .product(name: "PointFreeHTML", package: "pointfree-html")
+        ]
+    )
 ]
 ```
 
@@ -162,13 +123,10 @@ import PointFreeHTMLTestSupport
 
 @Test
 func testMyComponent() {
-    let component = MyComponent(title: "Test")
-    
+    let component = Greeting(name: "Coen ten Thije Boonkkamp")
     assertInlineSnapshot(of: component, as: .html) {
         """
-        <div>
-          <h1>Test</h1>
-        </div>
+        <h1>Hello, Coen ten Thije Boonkkamp!</h1> 
         """
     }
 }

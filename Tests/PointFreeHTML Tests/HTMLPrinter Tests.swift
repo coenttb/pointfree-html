@@ -6,9 +6,9 @@
 //
 
 import Dependencies
-import Foundation
 import PointFreeHTML
 import Testing
+import Foundation
 
 @Suite("HTMLPrinter Tests")
 struct HTMLPrinterTests {
